@@ -30,8 +30,8 @@ public OnPluginStart()
 public OnActivated(const String:output[], dugme, basan, Float:sure)
 {
 	if (IsValidClient(basan) && IsValidEdict(dugme))
-		if (GetClientTeam(basan) > 1)
-		HUD(-1.0, 0.2, 6.0, 255, 0, 0, 2, "\nKırmızı Takımdan: %N\n Düğmeye Bastı!", basan);
+		if (GetClientTeam(basan) == 2)
+		        HUD(-1.0, 0.2, 6.0, 255, 0, 0, 2, "\nKırmızı Takımdan: %N\n Düğmeye Bastı!", basan);
 }
 /*
 public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype) {
