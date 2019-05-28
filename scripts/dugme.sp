@@ -9,32 +9,39 @@
 #include <sdktools>
 #include <tf2>
 #include <tf2_stocks>
-//#include <sdkhooks>
+#include <sdkhooks>
 
 public Plugin:myinfo = 
 {
-	name = "Jailbreak Düğme Kontrol",
-	author = PLUGIN_AUTHOR,
-	description = "",
-	version = PLUGIN_VERSION,
+	name = "Jailbreak Düğme Kontrol", 
+	author = PLUGIN_AUTHOR, 
+	description = "", 
+	version = PLUGIN_VERSION, 
 	url = ""
 };
-
+public OnClientPutInServer(client) {
+	//SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+}
 public OnPluginStart()
 {
-	HookEntityOutput("func_button", "OnDamaged", Dugme_Hasar);
+	HookEntityOutput("func_button", "OnPressed", OnActivated);
+	HookEntityOutput("func_button", "OnDamaged", OnActivated);
 }
-public Dugme_Hasar(const String:output[], dugme, basan, Float:sure)
+public OnActivated(const String:output[], dugme, basan, Float:sure)
 {
-	decl String:dugmeIsmi[32];
-	if(IsValidClient(basan) && IsValidEdict(dugme))
-	{
-		if(GetClientTeam(basan) == 2)
-		{
-			HUD(-1.0, 0.2, 6.0, 255, 0, 0, 2, "\nKırmızı Takımdan: %N\n Düğmeye Bastı!", basan);
-	        }
-        }
+	if (IsValidClient(basan) && IsValidEdict(dugme))
+		if (GetClientTeam(basan) > 1)
+		HUD(-1.0, 0.2, 6.0, 255, 0, 0, 2, "\nKırmızı Takımdan: %N\n Düğmeye Bastı!", basan);
 }
+/*
+public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype) {
+	new ent = -1;
+	while(ent = FindEntityByClassname(ent, "func_button") != -1)
+		if(IsValidEntity(ent))
+			if(GetClientTeam(attacker) > 1)
+				HUD(-1.0, 0.2, 6.0, 255, 0, 0, 2, "\nKırmızı Takımdan: %N\n Düğmeye Bastı! (SDKHookDamage)", attacker);
+}
+*/
 stock bool:IsValidClient(client, bool:nobots = true)
 {
 	if (client <= 0 || client > MaxClients || !IsClientConnected(client) || (nobots && IsFakeClient(client)))
@@ -55,4 +62,4 @@ HUD(Float:x, Float:y, Float:Sure, r, g, b, kanal, const String:message[], any:..
 			ShowHudText(i, kanal, buffer);
 		}
 	}
-}
+} 
